@@ -9,7 +9,6 @@
 
 <?php
 echo $_SESSION['user_name'] ?? '', ' &nbsp;&nbsp;&nbsp;';
-echo '<a href="?do=rst_list">HOME</a>&nbsp;&nbsp&nbsp;';
 if (isset($_SESSION['usertype_id'])){
   
   $menu = array();//メニュー項目：プログラム名（拡張子.php省略）
