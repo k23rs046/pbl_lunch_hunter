@@ -6,7 +6,7 @@
     </head>
 <body>
     <main>
-        <button onclick="location.href='store_list.php'">店舗詳細</button>
+        <button onclick="location.href='rst_detail.php'">店舗詳細</button>
         <h2>店舗詳細情報編集・削除</h2>
         
         <form action="edit_delete_store.php" method="POST" enctype="multipart/form-data">
