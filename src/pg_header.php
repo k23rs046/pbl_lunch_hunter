@@ -8,6 +8,9 @@
 <div id="navbar">
 
 <?php
+function h($str) {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
 echo $_SESSION['user_name'] ?? '', ' &nbsp;&nbsp;&nbsp;';
 if (isset($_SESSION['usertype_id'])){
   

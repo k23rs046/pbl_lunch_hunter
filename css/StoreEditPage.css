@@ -1,0 +1,263 @@
+/* Store Edit Page Styles */
+
+.store-edit-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.store-edit-header {
+  background-color: #111827;
+  color: white;
+}
+
+.store-edit-main {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 1rem;
+}
+
+.edit-page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.edit-page-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .edit-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.edit-left-column {
+  grid-column: span 1;
+}
+
+@media (min-width: 1024px) {
+  .edit-left-column {
+    grid-column: span 2;
+  }
+}
+
+.edit-form {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field-label {
+  display: block;
+}
+
+.required-mark {
+  color: #ef4444;
+}
+
+.optional-mark {
+  color: #3b82f6;
+}
+
+.field-input-spacing {
+  margin-top: 0.5rem;
+}
+
+.character-counter {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 0.25rem;
+}
+
+.days-grid {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-select-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.time-select {
+  display: flex;
+  height: 2.5rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--input));
+  background-color: hsl(var(--background));
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.time-select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.phone-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.phone-input {
+  width: 6rem;
+}
+
+.phone-hint {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 0.25rem;
+}
+
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .genre-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.payment-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.preview-image {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.375rem;
+}
+
+.image-delete-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.image-upload-area {
+  width: 100%;
+  max-width: 28rem;
+  height: 12rem;
+  background-color: #f3f4f6;
+  border-radius: 0.375rem;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.image-upload-area:hover {
+  background-color: #e5e7eb;
+}
+
+.upload-icon-large {
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.5rem;
+  color: #9ca3af;
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #6b7280;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.preview-card {
+  padding-top: 1.5rem;
+}
+
+.preview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.preview-label {
+  color: hsl(var(--muted-foreground));
+}
+
+.preview-image-section {
+  margin-bottom: 0.5rem;
+}
+
+.preview-image-full {
+  width: 100%;
+  border-radius: 0.375rem;
+}
+
+.preview-text-break {
+  word-break: break-all;
+}
+
+.action-buttons-center {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-button-large {
+  min-width: 9.375rem;
+}
+
+.update-button {
+  background-color: #16a34a;
+}
+
+.update-button:hover {
+  background-color: #15803d;
+}
+
+.dialog-footer-gap {
+  gap: 0.5rem;
+}

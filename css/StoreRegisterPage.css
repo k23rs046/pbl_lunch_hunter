@@ -1,0 +1,78 @@
+/* Store Register Page Styles */
+
+.store-register-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.store-register-header {
+  background-color: #111827;
+  color: white;
+}
+
+.store-register-main {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 1rem;
+}
+
+.register-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.register-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .register-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.register-left-column {
+  grid-column: span 1;
+}
+
+@media (min-width: 1024px) {
+  .register-left-column {
+    grid-column: span 2;
+  }
+}
+
+.register-form {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.register-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.register-button {
+  min-width: 12.5rem;
+  background-color: #16a34a;
+}
+
+.register-button:hover {
+  background-color: #15803d;
+}
+
+.nav-button-register {
+  background-color: #16a34a;
+  color: white;
+}
+
+.nav-button-register:hover {
+  background-color: #15803d;
+}
