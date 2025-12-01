@@ -8,10 +8,6 @@ class Model
     ];
 
     protected static $codes = [
-<<<<<<< HEAD
-        'user_type'=>['1'=>'社員','9'=>'管理者']
-    ];
-=======
         'user_type'=>['1'=>'社員','9'=>'管理者'],
         'rst_genre'=>['1'=>'うどん','2'=>'ラーメン','3'=>'その他麺類','4'=>'定食','5'=>'カレー','6'=>'ファストフード',
         '7'=>'カフェ','8'=>'和食','9'=>'洋食','10'=>'焼肉','11'=>'中華','12'=>'その他'],
@@ -132,5 +128,4 @@ class Restaurant extends Model
 class Review extends Model
 {
     protected $table = "t_review";
->>>>>>> d5e1bad8b5d64089edfd228feb58890aaa924574
 }
