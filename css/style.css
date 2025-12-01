@@ -1,3 +1,201 @@
+/* ---------------------------------------------
+   Navbar
+--------------------------------------------- */
 #navbar {
-    text-align: right;
+    text-align: right;  /* #右寄せナビゲーション */
+}
+
+/* ---------------------------------------------
+   Light Theme (Default Variables)
+   #デフォルト（ライトテーマ）で使う色やサイズをCSS変数にまとめる
+--------------------------------------------- */
+:root {
+    --font-size: 16px; /* #基本の文字サイズ */
+
+    --background: #ffffff; /* #背景色（ライト） */
+    --foreground: oklch(0.145 0 0); /* #文字色（濃い） */
+
+    --card: #ffffff; /* #カード背景 */
+    --card-foreground: oklch(0.145 0 0); /* #カード文字色 */
+
+    --popover: oklch(1 0 0); /* #ポップアップ背景 */
+    --popover-foreground: oklch(0.145 0 0); /* #ポップアップ文字 */
+
+    --primary: #030213; /* #主に使うカラー（ボタンなど） */
+    --primary-foreground: oklch(1 0 0); /* #主カラー上の文字色 */
+
+    --secondary: oklch(0.95 0.0058 264.53); /* #サブカラー */
+    --secondary-foreground: #030213; /* #サブカラー上の文字色 */
+
+    --muted: #ececf0; /* #薄いグレー */
+    --muted-foreground: #717182; /* #薄いグレー上の文字色 */
+
+    --accent: #e9ebef; /* #アクセントカラー */
+    --accent-foreground: #030213; /* #アクセント文字色 */
+
+    --destructive: #d4183d; /* #危険系ボタンの赤 */
+    --destructive-foreground: #ffffff; /* #危険ボタンの文字色 */
+
+    --border: rgba(0, 0, 0, 0.1); /* #ボーダー色 */
+    --input: transparent; /* #インプット背景 */
+    --input-background: #f3f3f5; /* #インプット枠内の背景 */
+    --switch-background: #cbced4; /* #スイッチ背景 */
+
+    --font-weight-medium: 500; /* #中くらいの太さ */
+    --font-weight-normal: 400; /* #普通の太さ */
+
+    --ring: oklch(0.708 0 0); /* #フォーカスリング色 */
+
+    /* #チャート用の色セット */
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+
+    --radius: 0.625rem; /* #基本の角丸 */
+
+    /* #サイドバーの色いろいろ */
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+
+    --sidebar-primary: #030213;
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* ---------------------------------------------
+   Dark Theme
+   #html または body に .dark が付いたときに上書きされる値
+--------------------------------------------- */
+.dark {
+    --background: oklch(0.145 0 0); /* #背景（暗い色） */
+    --foreground: oklch(0.985 0 0); /* #文字色（明るい） */
+
+    --card: oklch(0.145 0 0);
+    --card-foreground: oklch(0.985 0 0);
+
+    --popover: oklch(0.145 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+
+    --primary: oklch(0.985 0 0); /* #明るい色のボタン */
+    --primary-foreground: oklch(0.205 0 0); /* #その上の文字色 */
+
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+
+    --destructive: oklch(0.396 0.141 25.723);
+    --destructive-foreground: oklch(0.637 0.237 25.331);
+
+    --border: oklch(0.269 0 0);
+    --input: oklch(0.269 0 0);
+    --ring: oklch(0.439 0 0);
+
+    --font-weight-medium: 500;
+    --font-weight-normal: 400;
+
+    /* #チャートの色（暗色バージョン） */
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+
+    /* #サイドバー（ダークテーマ） */
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+
+    --sidebar-border: oklch(0.269 0 0);
+    --sidebar-ring: oklch(0.439 0 0);
+}
+
+/* ---------------------------------------------
+   Base Styles
+   #Tailwind の @apply の代替処理
+--------------------------------------------- */
+
+/* #全要素にボーダー色とアウトライン色を設定 */
+* {
+    border-color: var(--border);
+    outline-color: color-mix(in oklch, var(--ring) 50%, transparent);
+}
+
+/* #背景と文字色を変数で統一管理 */
+body {
+    background: var(--background); /* #テーマごとに自動切替 */
+    color: var(--foreground); /* #読みやすい文字色 */
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; /* #基本フォント */
+}
+
+/* ---------------------------------------------
+   Typography
+   #見出し・文字サイズ・太さのベース設定
+--------------------------------------------- */
+h1 {
+    font-size: var(--text-2xl, 2rem); /* #大きめ見出し */
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+}
+
+h2 {
+    font-size: var(--text-xl, 1.5rem); /* #中見出し */
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+}
+
+h3 {
+    font-size: var(--text-lg, 1.25rem); /* #小見出し */
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+}
+
+h4 {
+    font-size: var(--text-base, 1rem); /* #さらに小さい見出し */
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+}
+
+/* #基本的な文字要素 */
+p,
+label,
+button,
+input {
+    font-size: var(--text-base, 1rem);
+    line-height: 1.5;
+}
+
+p,
+input {
+    font-weight: var(--font-weight-normal); /* #通常の文字 */
+}
+
+label,
+button {
+    font-weight: var(--font-weight-medium); /* #やや強調 */
+}
+
+/* ---------------------------------------------
+   Root Font Size
+--------------------------------------------- */
+html {
+    font-size: var(--font-size); /* #全体の文字サイズを調整しやすくする */
 }
