@@ -23,9 +23,10 @@ create table t_rstinfo(
     , start_time TIME not null comment ''
     , end_time TIME not null comment ''
     , tel_num VARCHAR(32) not null comment ''
-    , rst_holiday int 
-    , 
-    ,
-    ,
+    , rst_holiday INT not null comment ''
+    , rst_pay INT comment ''
+    , rst_infl VARCHAR(2048) comment ''
+    , photo BLOB comment ''
+    , user_id 
 ) comment '店舗情報';
 -- ユーザ
