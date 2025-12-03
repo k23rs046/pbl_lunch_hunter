@@ -33,7 +33,7 @@ $shops=array(
     ]
 );
 
-$perPage = 6; 
+$perPage = 1; 
 $total = count($shops);
 $totalPages = ceil($total / $perPage); // 総ページ数
 
