@@ -84,7 +84,9 @@ $shops=array(
                 <div><?php echo $shop['0']?></div>
             </div>
             <div class="phot">
-                <img class="img" src="" alt="未登録">
+                <a href="/src/detail.php">
+                    <img class="img" src="" alt="未登録">
+                </a>
             </div>
         </div>
     </div>
