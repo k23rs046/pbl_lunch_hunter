@@ -1,6 +1,6 @@
 <?php
 require_once 'model.php';
-$rst_save = new User();
+$rst_save = new Restaurant();
 
 $holiday = array_sum($_POST['rst_holiday'] ?? []);
 
