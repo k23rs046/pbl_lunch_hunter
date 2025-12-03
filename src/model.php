@@ -116,6 +116,7 @@ class User extends Model
     {
         return $this->getDetail("uid='{$uid}' AND upass='{$upass}'");
     }
+    
     function get_Userdetail($where){
         $user = $this->getDetail($where);
         if(empty($user)) return [];
@@ -128,6 +129,15 @@ class User extends Model
         $user['usertype'] = $usertype;
         return $user;
     }
+    function username($user){
+        $username = "{$user['user_l_name']}_{$user['user_f_name']}";
+        return $username;
+    }
+    function userkana($user){
+        $userkana = "{$user['user_l_kana']}_{$user['user_f_kana']}";
+        return $userkana;
+    }
+    
 }
 
 class Restaurant extends Model

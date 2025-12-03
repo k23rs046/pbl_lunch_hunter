@@ -12,7 +12,7 @@
 function h($str) {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
-echo $_SESSION['user_name'] ?? '', ' &nbsp;&nbsp;&nbsp;';
+echo $_SESSION['user_account'] ?? '', ' &nbsp;&nbsp;&nbsp;';
 if (isset($_SESSION['usertype_id'])){
   
   $menu = array();//メニュー項目：プログラム名（拡張子.php省略）
