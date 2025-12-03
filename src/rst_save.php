@@ -20,3 +20,5 @@ if(isset($_POST['rst_pay'])){
     $pay = array_sum($_POST['rst_pay'] ?? []);
     $data['rst_pay'] = $pay;
 }
+
+header('Location:rst_list.php');
