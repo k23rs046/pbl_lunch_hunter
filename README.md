@@ -49,6 +49,27 @@ C:/php/lampp-docker8/htdocs/
         - $data, 配列, 例：['name'=>'foo', 'age'=>18, 'tel'=>'12345']
         - $where, 条件を表す文字列, 例：'sid=k22rs999'
     
-
 - delete($where): 特定のテーブルに対して条件を満たすデータを削除する。
      - 引数: $where, 条件を表す文字列, 例：'sid=k22rs999'
+
+- get_favorite($user_id)ユーザお気に入り店舗検索
+    - 引数:$user_id, ユーザID
+
+- get_userlist($where, $orderby, $limit, $offset)ユーザリストを検索
+    - 引数:
+            - $where, 条件を表す文字列, 例：'sid=k22rs999'
+            - $orderby, 並べ替えの条件(並べ替: ASC昇順（省略可）、DESC：降順), 例:'user_id ASC'
+            - $limit, $offset,数値,表示範囲を指定できる
+
+- get_Userdetail($where)ユーザ詳細
+    - 引数: $where, 条件を表す文字列, 例：'sid=k22rs999'
+
+- username($user)姓と名で分かれているユーザの本名を結合
+    - 引数:$user_id, ユーザID
+- userkana($user)姓と名で分かれているユーザのフリガナを結合
+    - 引数:$user_id, ユーザID
+
+- get_mylist($table,$user_id)ユーザが登録した情報の参照
+    - 引数:
+        - $table,テーブル名,登録店舗の場合't_rstinfo',口コミの場合't_review'
+        - $user_id,ユーザID
