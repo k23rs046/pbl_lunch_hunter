@@ -60,7 +60,7 @@ $showShops = array_slice($shops, $start, $perPage);
     <div class="main">
         <h1>マイページ</h1>
         <!--ユーザ情報編集btn-->
-        <a class="btn" href="">ユーザ情報編集</a>
+        <button type="button" href="">ユーザ情報編集</button>
     </div>
     <!--アカウント情報-->
     <div class="info">

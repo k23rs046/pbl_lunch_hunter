@@ -3,7 +3,27 @@ $reports = array(
     [
         'id'=> '1',
         'アカウント名'=> 'タックン',
+        '評価点'=> '1',
+        'ジャンル'=> 'ラーメン',
+        '通報理由'=> '写真',
+        'コメント'=> '店主が臭い',
+        '通報者'=> '九尾 太郎',
+        '投稿主'=> '美輪 明宏',
+    ],
+    [
+        'id'=> '2',
+        'アカウント名'=> 'アカウント名',
         '評価点'=> '2',
+        'ジャンル'=> 'ジャンル',
+        '通報理由'=> 'コメント',
+        'コメント'=> 'コメント一部',
+        '通報者'=> '通報者',
+        '投稿主'=> '投稿主',
+    ],
+    [
+        'id'=> '1',
+        'アカウント名'=> 'タックン',
+        '評価点'=> '3',
         'ジャンル'=> 'ラーメン',
         '通報理由'=> '写真',
         'コメント'=> '店主が臭い',
@@ -19,9 +39,16 @@ $reports = array(
         'コメント'=> 'コメント一部',
         '通報者'=> '通報者',
         '投稿主'=> '投稿主',
-    ] 
+    ]
 );
+
+
+// sort が desc なら逆順
+$sort = $_GET['sort'] ?? 'asc';
+$sortedreports = ($sort === 'desc') ? array_reverse($reports) : $reports;
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -38,12 +65,15 @@ $reports = array(
 
 <div class="top-btn">
     <button type="button">通報取り消し一覧</button>
-    <button type="button">非表示</button>
-    <button type="button">投稿の古い順</button>
+    <button type="button" id="hidbtn">非表示</button>
+    <button type="button">
+        <a href="?sort=<?= $sort === 'asc' ? 'desc' : 'asc' ?>" class="btn">並び替え（<?php echo $sort === 'asc' ? '古い順' : '新着順' ?>）</a>
+    </button>
 </div>
 
 
-<?php foreach ($reports as $report): ?>
+
+<?php foreach ($sortedreports as $report): ?>
     <section class="report-box">
 
         <div class="left">
@@ -76,7 +106,7 @@ $reports = array(
                 <div class="pop" popover id="my">
                     <p>本当に削除しますか？</p>
                     <div class="yn">
-                        <button type="button" onclick="location.href='cancel.php?id=<?php echo $report['id']?? 0 ?>'">yes</button>
+                        <button id="hideBtn" type="button" onclick="location.href='cancel.php?id=<?php echo $report['id']?? 0 ?>'">yes</button>
                         <button type="button" onclick="document.getElementById('my').hidePopover()">no</button>
                     </div>                   
                 </div>
