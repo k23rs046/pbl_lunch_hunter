@@ -1,3 +1,4 @@
+//画面遷移制御
 <?php
 session_start();
 require_once 'src/model.php';
