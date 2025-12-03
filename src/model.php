@@ -153,6 +153,21 @@ class User extends Model
 
         return $users;
     }
+    //お気に入り店舗
+    function get_favorite($user_id){
+        $sql = "SELECT rst_id FROM t_favorite WHERE user_id = {$user_id}";
+        $favorites = $this ->query($sql);
+        $favorite=[];
+        foreach($favorites as $fav){
+            $rst_id = $fav['rst_id'];
+            $sql = "SELECT * FROM t_rstinfo WHERE rst_id = {$rst_id}";
+            $result = $this -> query($sql);
+            if(!empty($result)){
+                $favorite[] = $result[0];
+            }
+        }
+        return $favorite;
+    }
 }
 
 class Restaurant extends Model
