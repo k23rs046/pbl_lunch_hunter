@@ -115,6 +115,21 @@ class User extends Model
     {
         return $this->getDetail("uid='{$uid}' AND upass='{$upass}'");
     }
+    function get_Userdetail($where){
+        $user = $this->getDetail($where);
+        if(empty($user)) return [];
+
+        $usertype_id = $user['usertype_id'];
+
+        $sql = "SELECT usertype FROM t_usertype WHERE usertype_id={$usertype_id}";
+        $result = $this->query($sql);
+
+        $usertype = $result['usertype'] ?? '不明';
+
+        $user['usertype'] = $usertype;
+
+        return $user;
+    }
 }
 
 class Restaurant extends Model
