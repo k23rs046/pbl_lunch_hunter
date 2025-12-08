@@ -3,11 +3,11 @@ require_once('model.php');
 $user = new User();
 $rst = new Restaurant();
 $rev = new Review();
-$rep = new Report();
 
 echo '<pre>';
 var_dump($user->get_Userdetail(['user_id'=>'test']));
 echo '<br>';
-var_dump($rst->get_rstinfo(['user_id'=>'1']));
+var_dump($rst->get_RstDetail(['user_id'=>'1']));
 echo '<br>';
+var_dump($rev->get_RevDettail(['rev_id'=>'1']));
 echo '</pre>';

@@ -144,7 +144,12 @@ class User extends Model
     //ユーザ詳細
     function get_Userdetail($where)
     {
-        $user = $this->getDetail($where);
+        $data = [];
+        foreach($where as $key => $values){
+            $data[] = "$key = '$values'";
+        }
+        $wherestr = implode(' AND ',$data);
+        $user = $this->getDetail($wherestr);
         if (empty($user)) return [];
         $usertype_id = $user['usertype_id'];
 
@@ -158,9 +163,9 @@ class User extends Model
         return $user;
     }
     //ユーザリスト
-    function get_userlist($where = 1, $orderby = null, $limit = 0, $offset = 0)
+    function get_userlist($orderby = null, $limit = 0, $offset = 0)
     {
-        $sql = "SELECT * FROM t_user NATURAL JOIN t_usertype WHERE {$where}";
+        $sql = "SELECT * FROM t_user NATURAL JOIN t_usertype WHERE usertype_id = '1'";
         $users =  $this->query($sql, $orderby, $limit, $offset);
 
         return $users;
@@ -199,11 +204,16 @@ class Restaurant extends Model
             return $this->insert([$rst_id, $genre]);
         }
     }
-    function get_rstinfo($where)
+    function get_RstDetail($where)
     {
-        $rst = $this->getDetail($where);
+        $data = [];
+        foreach($where as $key => $values){
+            $data[] = "$key = '$values'";
+        }
+        $wherestr = implode(' AND ',$data);
+        $rst = $this->getDetail($wherestr);
         // holidays（ビットフラグ）をラベル配列に変換
-        $flag = (int)$rst['holidays'];  // DB の値（10進）
+        $flag = (int)$rst['rst_holiday'];  // DB の値（10進）
         $holidays = [];
 
         foreach (self::$codes['rst_holiday'] as $bit => $label) {
@@ -215,7 +225,7 @@ class Restaurant extends Model
         // 配列で格納（例： ['月','水','金']）
         $rst['holidays'] = $holidays;
 
-        $flag = (int)$rst['pay'];  // DBの値（10進）
+        $flag = (int)$rst['rst_pay'];  // DBの値（10進）
         $pays = [];
 
         foreach (self::$codes['rst_pay'] as $bit => $label) {
@@ -236,9 +246,27 @@ class Restaurant extends Model
 class Review extends Model
 {
     protected $table = "t_review";
+    function get_RevDettail($where){
+        $data = [];
+        foreach($where as $key => $values){
+            $data[] = "$key = '$values'";
+        }
+        $wherestr = implode(' AND ',$data);
+        $rev = $this->getDetail($wherestr);
+        return $rev;
+    }
 }
 
 class Report extends Model
 {
     protected $table = "t_report";
+    function get_RepoDettail($where){
+        $data = [];
+        foreach($where as $key => $values){
+            $data[] = "$key = '$values'";
+        }
+        $wherestr = implode(' AND ',$data);
+        $repo = $this->getDetail($wherestr);
+        return $repo;
+    }
 }

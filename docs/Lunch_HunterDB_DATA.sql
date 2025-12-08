@@ -46,3 +46,11 @@ INSERT INTO t_review
 VALUES
  ('4','良かった','1','test',1)
 ;
+
+INSERT INTO t_rst_genre
+ (rst_id,genre_id)
+VALUES
+ ('1','1')
+,('1','2')
+,('1','4')
+;
