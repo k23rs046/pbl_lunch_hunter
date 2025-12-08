@@ -83,33 +83,12 @@ foreach ($reviews as $r) {
       <p><?= $review_stars ?>（<?= $review_avg ?> / 5、<?= $review_count ?>件）</p>
     </div>
 
-    <!-- 投稿フォーム -->
+    <!-- あなたの口コミ（常にカード形式で表示） -->
     <div class="section">
-      <h3>コメント投稿</h3>
-      <form method="post" enctype="multipart/form-data">
-        <label for="comment">コメント（250文字以内）</label>
-        <textarea id="comment" name="comment" maxlength="250"></textarea>
-
-        <label for="photo">写真（任意）</label>
-        <input type="file" id="photo" name="photo">
-
-        <label for="rating">評価（1〜5）</label>
-        <select id="rating" name="rating">
-          <option value="1">★☆☆☆☆</option>
-          <option value="2">★★☆☆☆</option>
-          <option value="3">★★★☆☆</option>
-          <option value="4">★★★★☆</option>
-          <option value="5">★★★★★</option>
-        </select>
-
-        <button type="submit" name="submit_review">投稿</button>
-        <button type="submit" name="delete_review">投稿削除</button>
-      </form>
-
-      <!-- 自分の口コミを投稿フォーム直下に表示 -->
-      <?php if ($my_review): ?>
-        <div class="review_card">
-          <p><strong>あなたの口コミ：</strong></p>
+      <h3>あなたの口コミ</h3>
+      <div class="review_card">
+        <?php if ($my_review): ?>
+          <!-- 投稿済みの場合 -->
           <p><strong>評価：</strong><?= str_repeat('★', $my_review['rating']) ?><?= str_repeat('☆', 5 - $my_review['rating']) ?></p>
           <p><strong>コメント：</strong><?= htmlspecialchars($my_review['comment']) ?></p>
           <?php if (!empty($my_review['photo'])): ?>
@@ -120,8 +99,29 @@ foreach ($reviews as $r) {
             <button type="submit" name="edit_review">編集</button>
             <button type="submit" name="delete_review">削除</button>
           </form>
-        </div>
-      <?php endif; ?>
+        <?php else: ?>
+          <!-- 未投稿の場合はフォームをカード内に表示 -->
+          <form method="post" enctype="multipart/form-data">
+            <label for="comment">コメント（250文字以内）</label>
+            <textarea id="comment" name="comment" maxlength="250"></textarea>
+
+            <label for="photo">写真（任意）</label>
+            <input type="file" id="photo" name="photo">
+
+            <label for="rating">評価（1〜5）</label>
+            <select id="rating" name="rating">
+              <option value="1">★☆☆☆☆</option>
+              <option value="2">★★☆☆☆</option>
+              <option value="3">★★★☆☆</option>
+              <option value="4">★★★★☆</option>
+              <option value="5">★★★★★</option>
+            </select>
+
+            <button type="submit" name="submit_review">投稿</button>
+            <button type="submit" name="delete_review">投稿削除</button>
+          </form>
+        <?php endif; ?>
+      </div>
     </div>
 
     <!-- 他人の口コミ一覧 -->
