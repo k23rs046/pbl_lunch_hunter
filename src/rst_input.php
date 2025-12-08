@@ -1,12 +1,14 @@
 <main>
     <h2>店舗登録</h2>
     <?php
-    session_start();
-    if ($_SESSION['error'] == true) {
+    $error = $_SESSION['error'] ?? false;
+    if(!empty($_SESSION['error'])){
         echo '<h2 style="color:red">必須項目が未入力です</h2>';
+        unset($_SESSION['error']);
     }
+    
     ?>
-    <form action="rst_save.php" method="post" enctype="multipart/form-data">
+    <form action="?do=rst_save" method="post" enctype="multipart/form-data">
 
         <div class="registration-container">
 
@@ -26,15 +28,15 @@
                 <div class="form-group">
                     <label>定休日</label>
                     <span class="required-star">*必須</span><br>
-                    <label><input type="checkbox" name="holiday[]" value="日"> 日</label>
-                    <label><input type="checkbox" name="holiday[]" value="月"> 月</label>
-                    <label><input type="checkbox" name="holiday[]" value="火"> 火</label>
-                    <label><input type="checkbox" name="holiday[]" value="水"> 水</label>
-                    <label><input type="checkbox" name="holiday[]" value="木"> 木</label>
-                    <label><input type="checkbox" name="holiday[]" value="金"> 金</label>
-                    <label><input type="checkbox" name="holiday[]" value="土"> 土</label>
-                    <label><input type="checkbox" name="holiday[]" value="年中無休"> 年中無休</label>
-                    <label><input type="checkbox" name="holiday[]" value="未定"> 未定</label>
+                    <label><input type="checkbox" name="holiday[]" value=1> 日</label>
+                    <label><input type="checkbox" name="holiday[]" value=2> 月</label>
+                    <label><input type="checkbox" name="holiday[]" value=4> 火</label>
+                    <label><input type="checkbox" name="holiday[]" value=8> 水</label>
+                    <label><input type="checkbox" name="holiday[]" value=16> 木</label>
+                    <label><input type="checkbox" name="holiday[]" value=32> 金</label>
+                    <label><input type="checkbox" name="holiday[]" value=64> 土</label>
+                    <label><input type="checkbox" name="holiday[]" value="128"> 年中無休</label>
+                    <label><input type="checkbox" name="holiday[]" value="256"> 未定</label>
                 </div>
 
                 <div class="form-group">
@@ -156,17 +158,17 @@
                 <div class="form-group">
                     <label>ジャンル</label>
                     <span class="required-star">*必須</span><br>
-                    <label><input type="checkbox" name="genre[]" value="うどんラーメン"> うどん</label>
-                    <label><input type="checkbox" name="genre[]" value="うどんラーメン"> ラーメン</label>
-                    <label><input type="checkbox" name="genre[]" value="その他麺類"> その他麺類</label>
-                    <label><input type="checkbox" name="genre[]" value="ファストフード"> ファストフード</label>
-                    <label><input type="checkbox" name="genre[]" value="和食"> 和食</label>
-                    <label><input type="checkbox" name="genre[]" value="洋食"> 洋食</label>
-                    <label><input type="checkbox" name="genre[]" value="定食"> 定食</label>
-                    <label><input type="checkbox" name="genre[]" value="焼肉"> 焼肉</label>
-                    <label><input type="checkbox" name="genre[]" value="中華"> 中華</label>
-                    <label><input type="checkbox" name="genre[]" value="カレー"> カレー</label>
-                    <label><input type="checkbox" name="genre[]" value="その他"> その他</label>
+                    <label><input type="checkbox" name="genre[]" value="1"> うどん</label>
+                    <label><input type="checkbox" name="genre[]" value="2"> ラーメン</label>
+                    <label><input type="checkbox" name="genre[]" value="3"> その他麺類</label>
+                    <label><input type="checkbox" name="genre[]" value="4"> ファストフード</label>
+                    <label><input type="checkbox" name="genre[]" value="5"> 和食</label>
+                    <label><input type="checkbox" name="genre[]" value="6"> 洋食</label>
+                    <label><input type="checkbox" name="genre[]" value="7"> 定食</label>
+                    <label><input type="checkbox" name="genre[]" value="8"> 焼肉</label>
+                    <label><input type="checkbox" name="genre[]" value="9"> 中華</label>
+                    <label><input type="checkbox" name="genre[]" value="10"> カレー</label>
+                    <label><input type="checkbox" name="genre[]" value="11"> その他</label>
                 </div>
 
             </div>
@@ -175,10 +177,10 @@
                 <div class="form-group">
                     <label>支払い方法</label>
                     <span class="required-star">*必須</span><br>
-                    <label><input type="checkbox" name="payment[]" value="現金"> 現金</label>
-                    <label><input type="checkbox" name="payment[]" value="QRコード"> QRコード</label>
-                    <label><input type="checkbox" name="payment[]" value="電子マネー"> 電子マネー</label>
-                    <label><input type="checkbox" name="payment[]" value="クレジットカード"> クレジットカード</label>
+                    <label><input type="checkbox" name="payment[]" value="1"> 現金</label>
+                    <label><input type="checkbox" name="payment[]" value="2"> QRコード</label>
+                    <label><input type="checkbox" name="payment[]" value="4"> 電子マネー</label>
+                    <label><input type="checkbox" name="payment[]" value="8"> クレジットカード</label>
                 </div>
 
                 <div class="form-group">
