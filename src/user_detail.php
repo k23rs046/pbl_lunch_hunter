@@ -1,5 +1,6 @@
 <?php
-
+$user_id   = $_GET['user_id'] ?? '';
+$user_name = $_POST['user_name'] ?? '';
 
 // 仮の店舗データ
 $store = [
