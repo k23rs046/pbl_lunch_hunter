@@ -39,7 +39,7 @@ $shops=array(
     <div class="main">
         <h1>マイページ</h1>
         <!--ユーザ情報編集btn-->
-        <button onclick="location.href='?do=user_edit.php'">ユーザ情報編集</button>
+        <button onclick="location.href='?do=user_myedit'">ユーザ情報編集</button>
     </div>
     <!--アカウント情報-->
     <div class="info">
