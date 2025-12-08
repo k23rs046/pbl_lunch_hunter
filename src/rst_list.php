@@ -57,52 +57,6 @@ $paginated = array_slice($filtered,$offset,$perPage);
 // クエリを除いた現在ページのURL（閉じる用）
 $baseUrl = strtok($_SERVER['REQUEST_URI'], '?');
 ?>
-<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<title>Lunch Hunter</title>
-<style>
-body { font-family: sans-serif; margin:0; background:#f7f7f7; }
-header { background:#fff; border-bottom:1px solid #ccc; padding:10px; display:flex; justify-content:space-between; }
-header .left a { color:#b91c1c; text-decoration:none; }
-header .right a { margin-left:15px; text-decoration:none; color:#333; }
-
-main { max-width:1000px; margin:20px auto; padding:0 15px; }
-
-/* 検索フォーム */
-.search-box { background:#fff; padding:15px; border:1px solid #ddd; margin-bottom:20px; }
-.search-box input[type=text] { width:60%; padding:5px; }
-.search-box button { margin-left:5px; }
-.genre-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin:10px 0; }
-
-/* 店舗カード一覧 */
-.store-list { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; }
-.store { background:#fff; border:1px solid #ddd; border-radius:6px; overflow:hidden; }
-.store img { width:100%; height:150px; object-fit:cover; }
-.store .info { padding:10px; }
-.store .info div { margin-bottom:5px; }
-.store .rating { color:#d97706; font-weight:bold; }
-
-/* ページネーション */
-.pagination { text-align:center; margin-top:20px; }
-.pagination a { margin:0 5px; text-decoration:none; color:#333; }
-.pagination a.active { font-weight:bold; color:#0366d6; }
-
-/* ボタン風リンク */
-.btn-secondary { background:#e5e7eb; color:#111; padding:6px 10px; border-radius:6px; text-decoration:none; }
-</style>
-</head>
-<body>
-<header>
-  <div class="left"><a href="#">ログアウト</a></div>
-  <div class="right">
-    <a href="#">MY PAGE</a>
-    <a href="#">店舗一覧</a>
-    <a href="#">店舗登録</a>
-    <a href="#">店舗検索</a>
-  </div>
-</header>
 <main>
   <!-- 検索フォーム -->
   <div class="search-box">
