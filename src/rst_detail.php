@@ -140,7 +140,7 @@ print_r($rstdata);
 </div>
 
 <div class="shop-point">
-    <form action="?do=rst_detail_rvsave" method="post" enctype="multipart/form-data">
+    <form action="?do=rst_detail_rvsave" method="post">
     <h3>評価</h3>
     <div>総評価人数</div>
     <ul class="gurafu">
