@@ -92,8 +92,8 @@ class Model
         $needBlob = false;
 
         // 写真データが含まれているかチェック
-        foreach ($this->blobColumns as $col) {
-            if (isset($data[$col])) {
+        foreach ($this->blobColumns as $photo) {
+            if (!empty($data[$photo])) {
                 $needBlob = true;
                 break;
             }
@@ -107,7 +107,17 @@ class Model
     {
         if (empty($data)) die('INSERT用データが空です');
         $keys = implode(',', array_map(fn ($k) => "`$k`", array_keys($data)));
-        $values = array_map(fn ($v) => is_string($v) ? "'" . $this->db->real_escape_string($v) . "'" : $v, array_values($data));
+        $values = array_map(function ($v) {
+            if (is_null($v)) {
+                return "NULL";
+            } elseif (is_bool($v)) {
+                return $v ? 1 : 0;
+            } elseif (is_numeric($v)) {
+                return $v; // 数値はクォート不要
+            } else {
+                return "'" . $this->db->real_escape_string($v) . "'";
+            }
+        }, array_values($data));
         $values = implode(",", $values);
         $sql = "INSERT INTO {$this->table} ($keys) VALUES ($values)";
         $this->execute($sql);
@@ -128,12 +138,19 @@ class Model
         $types = '';
         $values = [];
         foreach ($data as $value) {
-            if (is_string($value)) {
-                $types .= 's'; // 文字列（バイナリも可）
+            if (is_null($value)) {
+                $types .= 's'; // NULL も string として bind_param する
+                $values[] = null;
+            } elseif (is_int($value)) {
+                $types .= 'i';
+                $values[] = $value;
+            } elseif (is_float($value)) {
+                $types .= 'd';
+                $values[] = $value;
             } else {
-                $types .= 'i'; // 数値
+                $types .= 's'; // string / binary
+                $values[] = $value;
             }
-            $values[] = $value;
         }
 
         $stmt->bind_param($types, ...$values);
