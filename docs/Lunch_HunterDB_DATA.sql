@@ -9,6 +9,7 @@ INSERT INTO t_usertype
  (usertype_id,usertype)
 VALUES
  ('1','社員')
+,('2','停止中')
 ,('9','管理者')
 ;
 
