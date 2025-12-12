@@ -54,3 +54,15 @@ VALUES
 ,('1','2')
 ,('1','4')
 ;
+
+INSERT INTO t_review
+ (eval_point,review_comment,rst_id,user_id,rev_state)
+VALUES
+ ('1','あの場所には行かない方がいい','1','test2',0)
+;
+
+INSERT INTO t_report
+ (review_id,user_id,report_reason,report_state)
+VALUES
+ ('2','test',2,1)
+;
