@@ -4,6 +4,14 @@ require_once 'model.php';
 $review = new Review();
 $report = new Report();
 
+function readBlob($key)
+{
+    if (!empty($_FILES[$key]['tmp_name'])) {
+        return file_get_contents($_FILES[$key]['tmp_name']);
+    }
+    return null;
+}
+
 // モード取得
 $mode = $_POST['mode'] ?? '';
 
