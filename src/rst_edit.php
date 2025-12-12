@@ -14,12 +14,14 @@ if (!$store_data) {
 }
 
 // チェックボックス用関数（ビットフラグ）
-function is_checked($value, $flags) {
+function is_checked($value, $flags)
+{
     return ($flags & $value);
 }
 
 // チェックボックス用関数（配列）
-function is_array_checked($value, $selected_array) {
+function is_array_checked($value, $selected_array)
+{
     return in_array($value, $selected_array);
 }
 
@@ -31,11 +33,12 @@ if (!empty($error)) {
 }
 
 // 時間リスト生成関数
-function generate_time_options($current_time) {
+function generate_time_options($current_time)
+{
     $options = '';
     $start = strtotime('0:00');
     $end = strtotime('24:00');
-    for ($time = $start; $time <= $end; $time += 30*60) {
+    for ($time = $start; $time <= $end; $time += 30 * 60) {
         $time_str = date('G:i', $time);
         $selected = ($time_str == $current_time) ? 'selected' : '';
         $options .= "<option value=\"{$time_str}\" {$selected}>{$time_str}</option>\n";
@@ -43,17 +46,26 @@ function generate_time_options($current_time) {
     return $options;
 }
 
+$tel_parts = explode('-', $store_data['tel_num']);
+$tel1 = $tel_parts[0] ?? '';
+$tel2 = $tel_parts[1] ?? '';
+$tel3 = $tel_parts[2] ?? '';
+
 // ジャンル配列（DBに保存されている場合は適宜変換）
-$genre_selected = $store_data['genre_selected'] ?? []; // 例: [5,6]
+$genre = new Genre();
+$genre_selected = $genre->getList("rst_id = {$rst_id}");
 
 ?>
 
 <main>
     <h2>店舗詳細編集・削除</h2>
-    
+
     <form action="?do=rst_save" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="mode" value="update">
         <input type="hidden" name="rst_id" value="<?= htmlspecialchars($rst_id) ?>">
-        
+        <input type="hidden" name="current_photo_path" value="<?= htmlspecialchars($store_data['photo1']) ?>">
+        <input type="hidden" name="delete_photo_flag" id="deletePhotoFlag" value="0">
+
         <div class="registration-container">
             <div class="left-col">
                 <!-- 店舗名 -->
@@ -75,8 +87,8 @@ $genre_selected = $store_data['genre_selected'] ?? []; // 例: [5,6]
                     <label>定休日</label>
                     <span class="required-star">*必須</span><br>
                     <?php
-                    $days = [1=>'日',2=>'月',4=>'火',8=>'水',16=>'木',32=>'金',64=>'土',128=>'年中無休',256=>'未定'];
-                    foreach ($days as $val=>$label): ?>
+                    $days = [1 => '日', 2 => '月', 4 => '火', 8 => '水', 16 => '木', 32 => '金', 64 => '土', 128 => '年中無休', 256 => '未定'];
+                    foreach ($days as $val => $label) : ?>
                         <label>
                             <input type="checkbox" name="holiday[]" value="<?= $val ?>" <?= is_checked($val, $store_data['rst_holiday']) ? 'checked' : '' ?>>
                             <?= $label ?>
@@ -88,21 +100,17 @@ $genre_selected = $store_data['genre_selected'] ?? []; // 例: [5,6]
                 <div class="form-group">
                     <label>営業時間</label>
                     <span class="required-star">*必須</span><br>
-                    <select name="open_time" required>
-                        <?= generate_time_options($store_data['start_time']) ?>
-                    </select>
-                    <select name="close_time" required>
-                        <?= generate_time_options($store_data['end_time']) ?>
-                    </select>
+                    <select name="open_time" required><?= generate_time_options($store_data['start_time']) ?></select>
+                    <select name="close_time" required><?= generate_time_options($store_data['end_time']) ?></select>
                 </div>
 
                 <!-- 電話番号 -->
                 <div class="form-group">
                     <label>電話番号</label>
                     <span class="required-star">*必須</span><br>
-                    <input type="tel" name="tel_part1" value="<?= htmlspecialchars(substr($store_data['tel_num'],0,3)) ?>" required> -
-                    <input type="tel" name="tel_part2" value="<?= htmlspecialchars(substr($store_data['tel_num'],3,4)) ?>" required> -
-                    <input type="tel" name="tel_part3" value="<?= htmlspecialchars(substr($store_data['tel_num'],7,4)) ?>" required>
+                    <input type="tel" name="tel_part1" value="<?= htmlspecialchars($tel1) ?>" required> -
+                    <input type="tel" name="tel_part2" value="<?= htmlspecialchars($tel2) ?>" required> -
+                    <input type="tel" name="tel_part3" value="<?= htmlspecialchars($tel3) ?>" required>
                 </div>
 
                 <!-- ジャンル -->
@@ -111,12 +119,18 @@ $genre_selected = $store_data['genre_selected'] ?? []; // 例: [5,6]
                     <span class="required-star">*必須</span><br>
                     <?php
                     $genres = [
-                        1 => 'うどん', 2 => 'ラーメン', 3 => 'その他麺類', 4 => '定食',5 => 'カレー', 
-                        6 => 'ファストフード', 7 => 'カフェ', 8 => '和食', 9 => '洋食', 10 => '焼肉', 11 => '中華',12 => 'その他'
+                        1 => 'うどん', 2 => 'ラーメン', 3 => 'その他麺類', 4 => '定食', 5 => 'カレー',
+                        6 => 'ファストフード', 7 => 'カフェ', 8 => '和食', 9 => '洋食', 10 => '焼肉', 11 => '中華', 12 => 'その他'
                     ];
-                    foreach($genres as $val=>$label): ?>
+                    $selected_ids = [];
+                    if (!empty($genre_selected)) {
+                        foreach ($genre_selected as $g) {
+                            $selected_ids[] = $g['genre_id'] ?? $g;
+                        }
+                    }
+                    foreach ($genres as $val => $label) : ?>
                         <label>
-                            <input type="checkbox" name="genre[]" value="<?= $val ?>" <?= is_array_checked($val, $genre_selected) ? 'checked' : '' ?>>
+                            <input type="checkbox" name="genre[]" value="<?= $val ?>" <?= in_array($val, $selected_ids) ? 'checked' : '' ?>>
                             <?= $label ?>
                         </label>
                     <?php endforeach; ?>
@@ -129,8 +143,8 @@ $genre_selected = $store_data['genre_selected'] ?? []; // 例: [5,6]
                     <label>支払い方法</label>
                     <span class="required-star">*必須</span><br>
                     <?php
-                    $payments = [1=>'現金',2=>'QRコード',4=>'電子マネー',8=>'クレジットカード'];
-                    foreach($payments as $val=>$label): ?>
+                    $payments = [1 => '現金', 2 => 'QRコード', 4 => '電子マネー', 8 => 'クレジットカード'];
+                    foreach ($payments as $val => $label) : ?>
                         <label>
                             <input type="checkbox" name="payment[]" value="<?= $val ?>" <?= is_checked($val, $store_data['rst_pay']) ? 'checked' : '' ?>>
                             <?= $label ?>
@@ -150,15 +164,21 @@ $genre_selected = $store_data['genre_selected'] ?? []; // 例: [5,6]
                     <label for="photo_file">写真</label>
                     <span class="optional-hash">#任意</span><br>
                     <input type="file" name="photo_file" accept="image/*">
-                    <?php if(!empty($store_data['photo1'])): ?>
-                        <img src="<?= htmlspecialchars($store_data['photo1']) ?>" style="max-width:200px; border:1px solid #ccc;">
+                    <?php if (!empty($store_data['photo1'])) : ?>
+                        <div id="photoPreviewWrapper" style="margin-top:10px;">
+                            <img id="preview_img" src="<?= htmlspecialchars($store_data['photo1']) ?>" style="max-width:200px; border:1px solid #ccc;">
+                            <button type="button" id="deletePhotoBtn">削除</button>
+                        </div>
                     <?php endif; ?>
                 </div>
-
             </div>
         </div>
 
         <button type="submit" name="update">更新</button>
-        <button type="button" id="deleteButton" style="background-color:red; color:white;">削除</button>
+    </form>
+    <form action="?do=rst_save" method="post" id="deleteForm">
+        <input type="hidden" name="mode" value="delete">
+        <input type="hidden" name="rst_id" value="<?= htmlspecialchars($rst_id) ?>">
+        <button type="submit" style="background-color:red; color:white;">削除</button>
     </form>
 </main>

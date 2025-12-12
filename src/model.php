@@ -250,7 +250,11 @@ class Model
         if (is_array($where)) {
             $whereParts = [];
             foreach ($where as $key => $value) {
-                $whereParts[] = "$key = '$value'";
+                if (is_numeric($value)) {
+                    $whereParts[] = "$key = $value";
+                } else {
+                    $whereParts[] = "$key = '" . $this->db->real_escape_string($value) . "'";
+                }
             }
             $whereStr = implode(' AND ', $whereParts);
         } else {

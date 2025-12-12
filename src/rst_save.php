@@ -6,12 +6,13 @@ $rst = new Restaurant();
 $favorite = new Favorite();
 $rev = new Review();
 $repo = new Report();
+$genre = new Genre();
+
 $mode   = $_POST['mode'] ?? 'insert';   // デフォルトは insert
 $rst_id = $_POST['rst_id'] ?? null;
 $rows = 0;
 $total_rows = 0;
 $tel_num = '';
-
 
 if ($mode === 'insert' || $mode === 'update') {
     // 必須項目チェック
@@ -23,16 +24,14 @@ if ($mode === 'insert' || $mode === 'update') {
         }
     }
 
-    // チェックボックス系
-    if (empty($_POST['holiday'])) $error = true;
-    if (empty($_POST['genre'])) $error = true;
-    if (empty($_POST['payment'])) $error = true;
+    if (empty($_POST['holiday']) || empty($_POST['genre']) || empty($_POST['payment'])) {
+        $error = true;
+    }
 
     // 電話番号結合
     $tel1 = $_POST['tel_part1'] ?? '';
     $tel2 = $_POST['tel_part2'] ?? '';
     $tel3 = $_POST['tel_part3'] ?? '';
-
     if (
         !isset($tel1) || strlen($tel1) < 2 || strlen($tel1) > 5 ||
         !isset($tel2) || strlen($tel2) < 1 || strlen($tel2) > 4 ||
@@ -43,69 +42,98 @@ if ($mode === 'insert' || $mode === 'update') {
         $tel_num = $tel1 . '-' . $tel2 . '-' . $tel3;
     }
 
-
-    // エラーがなければ登録処理
     if (!$error) {
+        // ビットフラグ処理
+        $holiday = array_sum(array_map('intval', $_POST['holiday']));
+        $genre_sum = array_sum(array_map('intval', $_POST['genre']));
+        $pay = array_sum($_POST['payment'] ?? []);
 
-        // 定休日・ジャンル・支払方法の合計（ビットフラグ）
-        $holiday = array_sum(array_map('intval', $_POST['holiday'] ?? []));
-        $genre = array_sum(array_map('intval', $_POST['genre'] ?? []));
-        $pay = isset($_POST['payment']) ? array_sum($_POST['payment']) : 0;
+        // 写真処理
+        $photo_file = $_POST['current_photo_path'] ?? ''; // デフォルトは既存写真
+        $delete_photo = isset($_POST['delete_photo_flag']) && $_POST['delete_photo_flag'] == '1';
 
-        // ファイル処理
-        $photo_file = '';
+        // 削除フラグが立っていれば既存写真を削除
+        if (!empty($_POST['delete_photo_flag']) && $_POST['delete_photo_flag'] === '1') {
+            // ファイル削除
+            if (!empty($_POST['current_photo_path']) && file_exists($_POST['current_photo_path'])) {
+                unlink($_POST['current_photo_path']);
+            }
+            $data['photo1'] = '';
+        }
+
+        // 新しい写真アップロードがあれば上書き
         if (isset($_FILES['photo_file']) && $_FILES['photo_file']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'uploads/';
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-            $photo_file = basename($_FILES['photo_file']['name']);
-            move_uploaded_file($_FILES['photo_file']['tmp_name'], $upload_dir . $photo_file);
+            $new_photo = basename($_FILES['photo_file']['name']);
+            move_uploaded_file($_FILES['photo_file']['tmp_name'], $upload_dir . $new_photo);
+            $photo_file = $upload_dir . $new_photo;
+
+            // 古い写真が残っていたら削除
+            if (!empty($_POST['current_photo_path']) && file_exists($_POST['current_photo_path'])) {
+                unlink($_POST['current_photo_path']);
+            }
         }
 
         // 登録データ
         $data = [
-            'rst_name' => $_POST['store_name'],
+            'rst_name'    => $_POST['store_name'],
             'rst_address' => $_POST['address'],
-            'start_time' => $_POST['open_time'],
-            'end_time' => $_POST['close_time'],
-            'tel_num' => $tel_num,
+            'start_time'  => $_POST['open_time'],
+            'end_time'    => $_POST['close_time'],
+            'tel_num'     => $tel_num,
             'rst_holiday' => $holiday,
-            'rst_pay' => $pay,
-            'rst_info' => $_POST['url'] ?? '',
-            'photo1' => $photo_file,
-            'user_id' => $_SESSION['user_id'],
-            'discount' => 0
+            'rst_pay'     => $pay,
+            'rst_info'    => $_POST['url'] ?? '',
+            'photo1'      => $photo_file,
+            'user_id'     => $_SESSION['user_id'],
+            'discount'    => 0
         ];
 
-        // データベースに登録
         if ($mode === 'insert') {
             $rst_id = $rst->rst_insert($data);
         } elseif ($mode === 'update' && !empty($rst_id)) {
             $rows = $rst->update($data, ['rst_id' => $rst_id]);
         }
 
-        $genre_save = new Genre();
         // ジャンル保存
-        $genre_array = $_POST['genre'] ?? [];
-        if ($rst_id !== null) {
-            $rows = $genre_save->save_genre($rst_id, $genre_array);
-        }
+
+        $genre->delete(['rst_id' => $rst_id]);
+        $genre->save_genre($rst_id, $_POST['genre'] ?? []);
     } else {
-        // 入力エラー時はフォームに戻す
         $_SESSION['old'] = $_POST;
         $_SESSION['error'] = true;
         header('Location:?do=rst_input');
         exit();
     }
 } elseif ($mode === 'discount' && !empty($rst_id)) {
-    $discount = isset($_POST['discount']) ? (int)$_POST['discount'] : 0;
+    $discount = (int)($_POST['discount'] ?? 0);
     $rows = $rst->update(['discount' => $discount], "rst_id={$rst_id}");
 } elseif ($mode === 'delete' && !empty($rst_id)) {
-    $rows_rst = $rst->delete(['rst_id' => $rst_id]);
-    $rows_fav = $favorite->delete(['rst_id' => $rst_id]);
-    $rows_rev = $rev->delete(['rst_id' => $rst_id]);
-    $rows_repo = $repo->delete(['rst_id' => $rst_id]);
+    $rst_id = (int)($_POST['rst_id'] ?? 0);
+    if ($rst_id > 0) {
 
-    $total_rows = $rows_rst + $rows_fav + $rows_rev + $rows_repo;
+        $reviews = $rev->getList("rst_id = {$rst_id}"); // review_id を持つ配列が返る想定
+
+        $report_ids = [];
+        foreach ($reviews as $r) {
+            $report_ids[] = $r['review_id'];
+        }
+
+        // レポート削除
+        $rows_repo = 0;
+        if (!empty($report_ids)) {
+            foreach ($report_ids as $rid) {
+                $rows_repo += $repo->delete(['review_id' => $rid]);
+            }
+        }
+        $rows_rst  = $rst->delete(['rst_id' => $rst_id]);
+        $rows_fav  = $favorite->delete(['rst_id' => $rst_id]);
+        $rows_rev  = $rev->delete(['rst_id' => $rst_id]);
+        $rows_genre = $genre->delete(['rst_id' => $rst_id]);
+        
+        $total_rows = $rows_repo + $rows_fav + $rows_rev + $rows_genre + $rows_rst;
+    }
 }
 
 $message_rows = ($mode === 'delete') ? $total_rows : $rows;
