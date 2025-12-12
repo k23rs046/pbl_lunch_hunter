@@ -1,130 +1,143 @@
 <?php
-$reports = array(
-    [
-        'id'=> '1',
-        'アカウント名'=> 'タックン',
-        '評価点'=> '3.7',
-        'ジャンル'=> 'ラーメン',
-        '通報理由'=> '写真',
-        'コメント'=> '店主が臭い',
-        '通報者'=> '九尾 太郎',
-        '投稿主'=> '美輪 明宏',
-        '非表示'=>'1',
-    ],
-    [
-        'id'=> '2',
-        'アカウント名'=> 'アカウント名',
-        '評価点'=> '1.5',
-        'ジャンル'=> 'ジャンル',
-        '通報理由'=> 'コメント',
-        'コメント'=> 'コメント一部',
-        '通報者'=> '通報者',
-        '投稿主'=> '投稿主',
-        '非表示'=>'0',
-        '取り消し'=>'1',
-    ],
-    [
-        'id'=> '3',
-        'アカウント名'=> 'タックン',
-        '評価点'=> '4.4',
-        'ジャンル'=> 'ラーメン',
-        '通報理由'=> '写真',
-        'コメント'=> '店主が臭い',
-        '通報者'=> '九尾 太郎',
-        '投稿主'=> '美輪 明宏',
-        '非表示'=>'1',
-    ],
-    [
-        'id'=> '4',
-        'アカウント名'=> 'アカウント名',
-        '評価点'=> '2.2',
-        'ジャンル'=> 'ジャンル',
-        '通報理由'=> 'コメント',
-        'コメント'=> 'コメント一部',
-        '通報者'=> '通報者',
-        '投稿主'=> '投稿主',
-        '非表示'=>'0',
-        '取り消し'=>'1',
-    ]
-);
+$repo = new Report();
+$user = new User();
+$rev = new Review();
+$rst = new Restaurant();
+
+$filter = $_GET['filter'] ?? '';
+if ($filter === "cancel") {
+    $reports = $repo->getList("report_state = 3");
+} elseif ($filter === "hidden") {
+    $reports = $repo->getList("report_state = 2");
+} else {
+    $reports = $repo->getList("report_state != 2 AND report_state != 3");
+}
 ?>
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>通報済み口コミ一覧</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
 <style>
-    *{
-        margin:0;
-    }
-
-    h1{
-        text-align: center;
-    }
-    .top-btn{
-        margin-left:80%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px; /* ボタンの間隔 */
-
-    }
-    .report-box{
+    .header-row {
         width: 80%;
+        margin: 20px auto;
         display: flex;
+        align-items: center;
+        justify-content: space-between;
+        /* ← 横に分ける */
+    }
+
+    .header-row h1 {
+        margin: 0;
+    }
+
+    .top-btn {
+        display: flex;
+        flex-direction: row;
+        /* ← 横並びに変更 */
+        gap: 10px;
+    }
+
+    .review-head-row {
+        display: flex;
+        gap: 30px;
+        /* 2つの項目の間隔 */
+        font-size: 20px;
+        /* 大きくする */
+        font-weight: bold;
+    }
+
+    .review-user,
+    .review-store {
+        font-size: 20px;
+    }
+
+    .review-head-row span {
+        display: block;
+        white-space: nowrap;
+        /* 折り返し禁止（横並び維持） */
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .report-card {
+        width: 80%;
         padding: 20px;
-        border: 0.5px solid;
-        border-radius: 10px;
-        margin:10px;
-        gap:20%;
-    }
-    .star{
-        display: flex;
-        gap:0.2px;
-    }
-
-    .kome{
         border: 1px solid #999;
-        padding: 8px;      
-        margin-top: 5px;   
-        border-radius: 5px;
-    }
-
-    .small{
-        font-size:12px
-    }
-
-    .btn02{
-        width:100px;
+        border-radius: 10px;
+        margin: 20px auto;
         display: flex;
         flex-direction: column;
-        gap:5px;
+        gap: 15px;
+        background: #fff;
     }
 
-    .pop{
-        margin-top: 40vh;
-        margin-left: 50%;
-        box-shadow: 5px 5px 5px;
+    .review-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
     }
 
+    .review-flex {
+        display: flex;
+        align-items: center;
+        /* 上下中央揃え */
+        gap: 30px;
+        /* 評価と画像の間隔 */
+    }
+
+    .star-row {
+        display: flex;
+        align-items: center;
+        font-size: 22px;
+        gap: 8px;
+    }
+
+    .rate-num {
+        font-size: 22px;
+        margin-left: 8px;
+    }
+
+    .reason {
+        padding: 10px;
+        background: #fafafa;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .repo-photo {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .repo-photo img {
+        width: 150px;
+        height: auto;
+        margin-right: 10px;
+        border-radius: 6px;
+    }
+
+    .kome {
+        margin-top: 10px;
+        font-size: 19px;
+        line-height: 1.6;
+    }
 
     .star-rating {
-    --rate: 0;        /* 0〜5 の小数(0.1 刻みなど)を直接入れる */
-    --size: 20px;
-    --star-color: #ccc;
-    --star-fill: gold;
+        --rate: 0;
+        --size: 20px;
+        --star-color: #ccc;
+        --star-fill: gold;
 
-    font-size: var(--size);
-    font-family: "Arial", sans-serif;
-    position: relative;
-    display: inline-block;
-    line-height: 1;
+        font-size: var(--size);
+        font-family: "Arial", sans-serif;
+        position: relative;
+        display: inline-block;
+        line-height: 1;
     }
 
     .star-rating::before {
@@ -138,166 +151,122 @@ $reports = array(
         position: absolute;
         left: 0;
         top: 0;
-        width: calc(var(--rate) * 20%);  /* ★ 小数点をそのまま使用（0.1 → 2%） */
+        width: calc(var(--rate) * 20%);
         overflow: hidden;
         white-space: nowrap;
     }
-
-
-
 </style>
 
+<div class="header-row">
+    <h1 class="report_title">通報済み口コミ一覧表示</h1>
 
-<h1 class="report_title">通報済み口コミ一覧表示</h1>
-
-<div class="top-btn">
-    <button type="button" id="cancelFilterBtn">通報取り消し一覧</button>
-    <button type="button" id="hidbtn">非表示</button>
-    <button type="button" id="sortBtn">並び替え（新着順）</button>
+    <div class="top-btn">
+        <a href="?do=rev_report&filter=cancel" class="btn btn-primary">通報取り消し一覧</a>
+        <a href="?do=rev_report&filter=hidden" class="btn btn-warning">非表示</a>
+        <a href="?do=rev_report" class="btn btn-info">並び替え（新着順）</a>
+    </div>
 </div>
 
 
 <div id="reportArea">
-<?php foreach ($reports as $report): ?>
-    <section class="report-box">
+    <?php foreach ($reports as $report) : ?>
+        <?php
+        if (empty($report['review_id'])) continue;
+        $rev_detail = $rev->get_RevDettail(['review_id' => $report['review_id']]);
+        if (!$rev_detail) continue;
 
-        <div class="left">
-            <h3><?php echo htmlspecialchars($report['アカウント名']) ?></h3>
-            <div class="star">
+        $rev_useraccount = $user->get_Userdetail(['user_id' => $rev_detail['user_id']])['user_account'] ?? '不明';
+        $rev_username = $user->get_Userdetail(['user_id' => $rev_detail['user_id']])['username'] ?? '不明';
+        $repo_username = $user->get_Userdetail(['user_id' => $report['user_id']])['username'] ?? '不明';
+        $rst_name = $rst->get_RstDetail(['rst_id' => $rev_detail['rst_id']])['rst_name'] ?? '不明';
+        $rate = (float)$rev_detail['eval_point'];
 
-                <!--<div>評価：</div>
-                <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <?php echo $i<=(int)$report['評価点'] ? "★" : "☆" ?>
-                <?php endfor; ?>
-                <div><?php echo $report['評価点']?></div>-->
+        $reasonLabels = [1 => '写真', 2 => 'コメント', 3 => '両方'];
+        $reason = $reasonLabels[$report['report_reason']] ?? '不明';
+        ?>
+        <section class="report-card">
 
-                <div>評価：</div>
-                <?php $rate = (float)$report['評価点']; ?>
-                <div class="star-rating" style="--rate: <?= $rate ?>;"></div>
-                <div><?= htmlspecialchars($report['評価点']) ?></div>
-            </div>
-            <div class="kome">
-                <div><?php echo htmlspecialchars($report['コメント']) ?></div>
-            </div>
+            <div class="review-info">
 
-            <div class="small">
-                <p>投稿主：<?php echo htmlspecialchars($report['通報者']) ?></p>
-                <p>通報者：<?php echo htmlspecialchars($report['投稿主']) ?></p>
-            </div>
-        </div>
-
-        <div class="right">
-            <h3>#<?php echo htmlspecialchars($report['ジャンル']) ?></h3>
-            <div>通報内容：<?php echo htmlspecialchars($report['通報理由']) ?></div>
-
-            <div class="pop" popover="manual" id="my-<?= $report['id'] ?>">
-                <p>本当に削除しますか？</p>
-                    <div class="yn">
-                        <button type="button" onclick="location.href='cancel.php?id=<?php echo $report['id'] ?? 0 ?>'">yes</button>
-                        <button type="button" onclick="document.getElementById('my-<?= $report['id'] ?>').hidePopover()">no</button>
-                     </div>
-            </div>
-        </div>
-    <div class="btn02">
-        <button type="button" onclick="location.href='?do=rev_detail.php'"><a href="?do=rev_detail.php">詳細</a></button>
-        <button type="button">取り消し</button>
-        <button class="btn0" popovertarget="my-<?= $report['id'] ?>">削除</button>
-    </div>
-    </section>
-<?php endforeach; ?>
-</div>
-
-<script>
-    let reports = <?php echo json_encode($reports); ?>;
-    let isDesc = false; 
-    let hideMode = false;
-    let cancelMode = false;
-
-    const renderReports = () => {
-        const area = document.getElementById("reportArea");
-        area.innerHTML = "";
-
-        let list = reports;
-
-        if (hideMode) {
-            list = list.filter(r => r['非表示'] === '1');
-        }
-
-        if (cancelMode) {
-            list = list.filter(r => r['取り消し'] === '1');
-        }
-
-        if (isDesc) list = [...list].reverse();
-
-        list.forEach(report => {
-            area.innerHTML += `
-            <section class="report-box">
-                <div class="left">
-                    <h3>${report['アカウント名']}</h3>
-                    <div class="star">
-                        <p>評価：${report['評価点']}</p>
-                        <div class="star-rating" style="--rate:${parseFloat(report['評価点'])}"></div>
-                    </div>
-                    <div class="kome">
-                        <div>${report['コメント']}</div>
-                    </div>
-                    
-                    <div class="small">
-                        <p>投稿主：${report['通報者']}</p>
-                        <p>通報者：${report['投稿主']}</p>
+                <!-- 投稿者 + 店舗名（横並び） -->
+                <div class="review-head big">
+                    <div class="review-head-row">
+                        <span class="review-user">投稿者：<?= htmlspecialchars($rev_username) ?></span>
+                        <span class="review-store">店舗名：<?= htmlspecialchars($rev_detail['store_name'] ?? '不明') ?></span>
                     </div>
                 </div>
-                <div class="right">
-                    <h3>#${report['ジャンル']}</h3>
-                    <div>通報内容：${report['通報理由']}</div> 
 
-                    <div class="pop" popover="manual" id="my-<?= $report['id'] ?>">
-                        <p>本当に削除しますか？</p>
-                        <div class="yn">
-                            <button type="button" onclick="location.href='cancel.php?id=<?php echo $report['id'] ?? 0 ?>'">yes</button>
-                            <button type="button" onclick="document.getElementById('my-<?= $report['id'] ?>').hidePopover()">no</button>
+                <div class="review-flex">
+                    <!-- 評価 -->
+                    <div class="star-row">
+                        <span class="label-big">評価：</span>
+                        <div class="star-rating" style="--rate: <?= $rate ?>"></div>
+                        <span class="rate-num"><?= htmlspecialchars($rev_detail['eval_point']) ?></span>
+                    </div>
+
+                    <!-- 画像（3枚） -->
+                    <div class="repo-photo">
+                        <?php for ($i = 1; $i <= 3; $i++) : ?>
+                            <?php if (!empty($rev_detail["photo{$i}"])) : ?>
+                                <img src="data:image/jpeg;base64,<?= base64_encode($rev_detail["photo{$i}"]) ?>">
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+
+                <!-- コメント -->
+                <div class="kome">
+                    <?= nl2br(htmlspecialchars($rev_detail['review_comment'])) ?>
+                </div>
+
+
+                <div class="reason">通報内容：<?= htmlspecialchars($reason) ?></div>
+                <div class="user-meta small">
+                    <p>投稿主：<?= htmlspecialchars($rev_username) ?></p>
+                    <p>通報者：<?= htmlspecialchars($repo_username) ?></p>
+                </div>
+                <div class="actions">
+                    <a href="?do=rev_detail&rev_id=<?= $report['review_id'] ?>" class="btn btn-info">詳細</a>
+
+                    <form method="post" action="?do=rev_save">
+                        <input type="hidden" name="mode" value="cancel">
+                        <input type="hidden" name="rev_id" value="<?= $report['review_id'] ?>">
+                        <input type="hidden" name="repo_id" value="<?= $report['report_id'] ?>">
+                        <button type="submit" class="btn btn-primary">取り消し</button>
+                    </form>
+
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#deleteModal-<?= $report['review_id'] ?>">
+                        削除
+                    </button>
+                </div>
+
+                <!-- 削除モーダル -->
+                <div class="modal fade" id="deleteModal-<?= $report['review_id'] ?>" tabindex="-1">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">確認</h4>
+                            </div>
+
+                            <div class="modal-body">本当に削除しますか？</div>
+
+                            <div class="modal-footer">
+                                <form method="post" action="?do=rev_save">
+                                    <input type="hidden" name="mode" value="delete">
+                                    <input type="hidden" name="rev_id" value="<?= $report['review_id'] ?>">
+                                    <input type="hidden" name="repo_id" value="<?= $report['report_id'] ?>">
+                                    <button type="submit" class="btn btn-danger">削除する</button>
+                                </form>
+
+                                <button class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                            </div>
+
                         </div>
                     </div>
-                </div> 
-            <div class="btn02">
-                <button type="button" onclick="location.href='detail.php?id=${report['id']}'">詳細</button>
-                <button type="button">取り消し</button>
-                <button class="btn0" popovertarget="my-<?= $report['id'] ?>">削除</button>
-            </div>       
-            </section>
-            `;
-        });
-    };
+                </div>
 
-    
-
-    // 初回描画
-    renderReports();
-
-    // 並び替えボタン
-    document.getElementById("sortBtn").onclick = () => {
-    isDesc = !isDesc;
-
-    document.getElementById("sortBtn").innerText = isDesc 
-        ? "並び替え（古い順）"
-        : "並び替え（新着順）";
-
-    renderReports();
-    };
-
-    document.getElementById("hidbtn").onclick = () => {
-        hideMode = !hideMode;
-        document.getElementById("hidbtn").innerText = hideMode ? "全件表示" : "非表示";
-        renderReports();
-    };
-
-    document.getElementById("cancelFilterBtn").onclick = () => {
-        cancelMode = !cancelMode;
-        document.getElementById("cancelFilterBtn").innerText = cancelMode ? "一覧" : "取り消し一覧";
-        renderReports();
-    };
-
-</script>
-
-</body>
-</html>
+        </section>
+    <?php endforeach; ?>
+</div>

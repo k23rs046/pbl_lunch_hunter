@@ -91,7 +91,7 @@ require_once('model.php');
 $modelR = new Review();
 $modelU = new user();
 //レビューをリンクから取得
-$review_id = $_GET['rid'];
+$review_id = $_GET['rev_id'];
 //レビューをリンクから取得
 $review = $modelR -> getDetail("review_id =". $review_id);
 print_r($review);
