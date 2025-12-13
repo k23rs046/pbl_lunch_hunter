@@ -39,7 +39,7 @@ switch ($mode) {
         $data = [
             'eval_point'      => $_POST['eval_point'],
             'review_comment'  => $_POST['review_comment'] ?? null,
-            'rst_id'          => $_SESSION['rst_id'],
+            'rst_id'          => $_POST['rst_id'],
             'user_id'         => $_SESSION['user_id'],
             'photo1'          => readBlob('photo1'),
             'photo2'          => readBlob('photo2'),
